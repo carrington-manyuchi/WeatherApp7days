@@ -20,7 +20,7 @@ class WeatherTableViewCell: UITableViewCell {
         // Configure the view for the selected state
     }
     
-    //Adding the  identifier and Nib functions  to register the cells
+     
     static let identifier = "WeatherTableViewCell"
     
     static func nib() -> UINib {
