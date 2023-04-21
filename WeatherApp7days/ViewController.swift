@@ -23,7 +23,7 @@ import CoreLocation
 class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, CLLocationManagerDelegate {
     
     @IBOutlet var  table: UITableView!
-    
+    var hourly = [Current]()
     var models = [Daily]()
     var current: Current?
     
@@ -111,6 +111,11 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             let current = result.current
             self.current = current
             
+            let  hours = result.hourly
+            self.hourly = hours
+            
+           // print(result.hourly)
+            
             
             // update user interface
 
@@ -167,11 +172,29 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     
     //MARK: - Basic Table Functionality
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 2
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if section == 0 {
+            
+            // 1 cell that is a collectiontableviewcell
+            return 1
+        }
         return models.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+        if indexPath.section == 0 {
+            // Continue
+            let cell = tableView.dequeueReusableCell(withIdentifier: HourlyTableViewCell.identifier, for: indexPath) as! HourlyTableViewCell
+            cell.configure(with: hourly)
+            return cell
+        }
+        
+        // Continue
         let cell = tableView.dequeueReusableCell(withIdentifier: WeatherTableViewCell.identifier, for: indexPath) as! WeatherTableViewCell
         cell.configure(with: models[indexPath.row])
         return cell
@@ -217,7 +240,7 @@ struct Current: Codable {
     let windDeg: Int
     let weather: [WeatherElement]
     let windGust: Double?
-    let pop: Int?
+   
 
     enum CodingKeys: String, CodingKey {
         case dt, sunrise, sunset, temp
@@ -229,7 +252,7 @@ struct Current: Codable {
         case windDeg = "wind_deg"
         case weather
         case windGust = "wind_gust"
-        case pop
+     
     }
 }
 
